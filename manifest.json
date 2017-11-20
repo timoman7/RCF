@@ -18,7 +18,7 @@
   },
   "permissions": [
     "tabs",
-    "*://*.imgur.com/gallery/*"
+    "*://*.imgur.com/*"
   ],
   "icons": {
     "16": "assets/icon16.png",
@@ -29,7 +29,7 @@
   },
   "content_scripts":[{
     "matches": [
-      "*://*.imgur.com/gallery/*"
+      "*://*.imgur.com/*"
     ],
     "css":["mystyles.css"],
     "js": [
