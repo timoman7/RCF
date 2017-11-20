@@ -1,0 +1,45 @@
+body{
+  background-color: #141518;
+}
+h1{
+  text-align: center;
+}
+div#backButton{
+  left: 2px;
+  top: 1px;
+  z-index:10;
+  position: absolute;
+}
+div.section{
+  border-top: thick solid rgba(255,255,255,1);
+  border-bottom: thick solid rgba(255,255,255,1);
+  padding: 10px;
+}
+td.symbolID{
+  text-align: center;
+}
+td.styleName{
+  padding-left: 5px;
+}
+tr.rowHeader th{
+  vertical-align: middle;
+}
+tr.myRow td{
+  vertical-align: middle;
+}
+tr:nth-child(even){
+  background-color: rgba(255,255,255, 0.5);
+}
+tr:nth-child(odd){
+  background-color: rgba(255,255,255, 0.2);
+}
+tr:nth-child(even):not(tr.rowHeader):hover{
+  background-color: rgba(255,255,255, 0.7);
+}
+tr:nth-child(odd):not(tr.rowHeader):hover{
+  background-color: rgba(255,255,255, 0.4);
+}
+#StyleMarkers{
+  width: 400px;
+  height: 200px;
+}

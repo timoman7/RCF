@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "Imgur Comment Formatting",
+  "short_name": "ICF",
+  "description": "Dynamic formatting for Imgur comments",
+  "version": "1.0.0",
+  "minimum_chrome_version": "38",
+  "browser_action": {
+    "default_icon": {
+        "16": "assets/icon16.png",
+        "24": "assets/icon24.png",
+        "32": "assets/icon32.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
+    },
+    "default_title": "Imgur Comment Formatting",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "*://*.imgur.com/gallery/*"
+  ],
+  "icons": {
+    "16": "assets/icon16.png",
+    "24": "assets/icon24.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "content_scripts":[{
+    "matches": [
+      "*://*.imgur.com/gallery/*"
+    ],
+    "css":["mystyles.css"],
+    "js": [
+      "main.js",
+      "jquery.min.js",
+      "bootstrap.min.js"
+    ]
+  }]
+}
