@@ -3,7 +3,7 @@
   "name": "Imgur Comment Formatting",
   "short_name": "ICF",
   "description": "Dynamic formatting for Imgur comments",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minimum_chrome_version": "38",
   "browser_action": {
     "default_icon": {
@@ -18,7 +18,7 @@
   },
   "permissions": [
     "tabs",
-    "*://www.imgur.com/*"
+    "*://imgur.com/*"
   ],
   "icons": {
     "16": "assets/icon16.png",
@@ -29,9 +29,8 @@
   },
   "content_scripts":[{
     "matches": [
-      "*://www.imgur.com/*"
+      "*://imgur.com/*"
     ],
-    "css":["mystyles.css"],
     "js": [
       "main.js",
       "jquery.min.js",

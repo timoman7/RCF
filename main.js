@@ -1,5 +1,17 @@
+var pastCommentCount = 0;
+var OPTIONS = {
+  mode: "formatted"
+};
+function setOptionValue(opt, val){
+  console.log(opt, val);
+  if(opt == "mode" && OPTIONS.mode != val){
+    pastCommentCount = 0;
+  }
+  OPTIONS[opt] = val;
+  localStorage.setItem("ICFOPTIONS", JSON.stringify(OPTIONS));
+}
 (function Factory(){
-  var pastCommentCount = 0;
+  var originalComments = {};
   const Formatting = {
     Super: "^",
     Strong: "*",
@@ -95,9 +107,26 @@
   }
   function formatComments(CommentList){
     for(let CommentIndex = 0; CommentIndex < CommentList.length; CommentIndex++){
-      let CurCommentTextEl = CommentList[CommentIndex].querySelector(".caption").querySelector(".usertext").children[1].children[0];
+      let CommentContainer = CommentList[CommentIndex].querySelector(".caption");
+      let CurCommentTextEl = CommentContainer.querySelector(".usertext").children[1].children[0];
       if(!CurCommentTextEl.classList.contains("formatted")){
-        parseComment(CurCommentTextEl);
+        originalComments[CommentContainer.getAttribute("data-id")] = CurCommentTextEl.innerHTML+"";
+        localStorage.setItem("originalComments", JSON.stringify(originalComments));
+      }
+      let lsOPTIONS = localStorage.getItem('ICFOPTIONS') ? JSON.parse(localStorage.getItem('ICFOPTIONS')) : OPTIONS;
+      if(lsOPTIONS.mode == "formatted"){
+        if(!CurCommentTextEl.classList.contains("formatted")){
+          parseComment(CurCommentTextEl);
+        }
+      }else if(lsOPTIONS.mode == "original"){
+        if(CurCommentTextEl.classList.contains("formatted")){
+          let commentDataId = CommentContainer.getAttribute("data-id");
+          let _originalComments = JSON.parse(localStorage.getItem("originalComments"));
+          if(_originalComments.hasOwnProperty(commentDataId)){
+            CurCommentTextEl.innerHTML = _originalComments[commentDataId];
+            CurCommentTextEl.classList.remove("formatted");
+          }
+        }
       }
     }
   }
@@ -119,7 +148,10 @@
   function CommentLoop(){
     containerUpdate();
   }
-  window.addEventListener('load',function(){
+  function windowOnLoad(){
     setTimeout(CommentLoop, 500);
-  });
+  }
+  window.addEventListener('load',windowOnLoad);
+  console.log(originalComments)
+  //console.log(localStorage);
 })();
