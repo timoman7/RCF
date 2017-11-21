@@ -3,7 +3,6 @@ var OPTIONS = {
   mode: "formatted"
 };
 function setOptionValue(opt, val){
-  console.log(opt, val);
   if(opt == "mode" && OPTIONS.mode != val){
     pastCommentCount = 0;
   }
@@ -152,6 +151,4 @@ function setOptionValue(opt, val){
     setTimeout(CommentLoop, 500);
   }
   window.addEventListener('load',windowOnLoad);
-  console.log(originalComments)
-  //console.log(localStorage);
 })();
