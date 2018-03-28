@@ -330,7 +330,7 @@ function setDataValue(dat, val){
     containerUpdate();
   }
   function textToLink(commentText){
-    let _domLink = `<img src='${commentText.replace('.gifv','.gif')}' style='width:64px;height:64px;'>`;
+    let _domLink = `<img src='${commentText.replace('.gifv','.gif')}' style='height:64px;'>`;
     let rv = {
       toReplace: commentText,
       domLink: _domLink
@@ -388,9 +388,13 @@ function setDataValue(dat, val){
     document.head.appendChild(l2);
     document.head.appendChild(l3);
     document.body.style.backgroundColor = "#141518";
+    let mCommentContainer = document.createElement('div');
+    mCommentContainer.id="comments-container";
+    mCommentContainer.classList.add("comments-initialized");
     let mCaptions = document.createElement('div');
     mCaptions.classList.add('captions');
-    document.body.appendChild(mCaptions);
+    mCommentContainer.appendChild(mCaptions);
+    document.body.appendChild(mCommentContainer);
     let cTemplate = document.createElement('template');
     cTemplate.id = 'commentTemplate';
     cTemplate.innerHTML =
