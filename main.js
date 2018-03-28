@@ -5,8 +5,9 @@
  *
  */
 var pastCommentCount = 0;
-var OPTIONS = {
-  mode: "formatted"
+var OPTIONS = localStorage.getItem('ICFOPTIONS')!=null?JSON.parse(localStorage.getItem('ICFOPTIONS')):{
+  mode: "formatted",
+  fcColor: "red"
 };
 var DATA = localStorage.getItem('ICFDATA')!=null?JSON.parse(localStorage.getItem('ICFDATA')):{
   favoriteComments: {}
@@ -25,7 +26,28 @@ function setDataValue(dat, val){
 (function Factory(){
   let jsStylesheet = `
     body{
-      background: red;
+      background: #141518;
+    }
+    .favcomment-caption-link{
+      transform: scale(0.75);
+      height: 0px;
+      text-align: center;
+      margin: 0;
+      border: 0;
+      padding: 0;
+      vertical-align: sub;
+    }
+    .favcomment-caption-link.icon-favorite-outline{
+      transition-property: transform;
+      transition-duration: 0.2s;
+    }
+    .favcomment-caption-link.icon-favorite-fill{
+      transition-property: color transform;
+      transition-duration: 0.2s;
+      color: ${OPTIONS.fcColor};
+    }
+    .favcomment-caption-link:active{
+      transform: scale(1);
     }
   `;
   function stylize(el, params){
@@ -226,13 +248,13 @@ function setDataValue(dat, val){
     favButtons.forEach((b)=>{
       b.classList.add('icon-favorite-outline');
       b.classList.remove('icon-favorite-fill');
-      b.classList.remove('red');
+      //b.classList.remove('red');
     });
     let favButtonsActFav = document.querySelectorAll('.favcomment-caption-link.isfavorite');
     favButtonsActFav.forEach((b)=>{
       b.classList.remove('icon-favorite-outline');
       b.classList.add('icon-favorite-fill');
-      b.classList.add('red');
+      //b.classList.add('red');
     });
   }
   async function addToFavComments(clickComment){
@@ -318,24 +340,10 @@ function setDataValue(dat, val){
             'post-action-icon',
             'favcomment-caption-link'
           ],
-          innerHTML: '',
           style: {
-            transform: "scale(0.5)",
-            transition: "transform 2s",
-            height: "0px",
-            textAlign: "center",
-            margin: "0",
-            border: "0",
-            padding: "0"
-          }
-        });
-        let favText = addElement({
-          tagName: 'div',
-          appendTo: favCommentWrapper,
-          innerHTML: 'Favorite',
-          style: {
-            transform: "translateY(-3px)"
-          }
+            transition: "transform 0.2s color 0.2s"
+          },
+          innerHTML: ''
         });
         UserText.appendChild(commentFavorite);
         UserText.classList.add('addedBtn');
@@ -452,11 +460,6 @@ function setDataValue(dat, val){
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i'
     });
-    addElement({
-      tagName: 'style',
-      appendTo: document.head,
-      innerHTML: jsStylesheet
-    });
     ///document.body.style.backgroundColor = "#141518";
     let mCommentContainer = document.createElement('div');
     mCommentContainer.id="comments-container";
@@ -513,6 +516,11 @@ function setDataValue(dat, val){
   }
   function windowOnLoad(){
     if(window.location.origin == 'https://imgur.com'){
+      addElement({
+        tagName: 'style',
+        appendTo: document.head,
+        innerHTML: jsStylesheet
+      });
       addFCButton();
       if(window.location.pathname.match(/\/gallery\/[a-zA-Z0-9]*\b/g)){
         setTimeout(CommentLoop, 500);
