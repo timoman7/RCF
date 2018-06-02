@@ -534,6 +534,18 @@ function setDataValue(dat, val){
       aref.innerHTML = 'favorite comments';
       a.appendChild(aref);
       $(a).insertBefore($(ud).children()[3]);
+    }else{
+      let ddl = document.querySelector('.NavbarUserMenu');
+      if(ddl){
+        let myMenu = ddl.querySelector('.Dropdown-menu').querySelector('.Dropdown-list').querySelector('.Dropdown-option-group');
+        if(myMenu){
+          let newOption = document.createElement('a');
+          newOption.classList.add('Dropdown-option');
+          newOption.href = `//imgur.com/user/ICFExtension/favoriteComments`;
+          newOption.innerHTML = 'Favorite comments';
+          $(newOption).insertBefore($(myMenu).children()[3]);
+        }
+      }
     }
   }
   function windowOnLoad(){
