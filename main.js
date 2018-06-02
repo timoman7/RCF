@@ -123,6 +123,23 @@ function setDataValue(dat, val){
       }
     });
   }
+  async function getAlbumById(albumHash){
+    return await $.ajax({
+    	url: `https://api.imgur.com/3/album/${albumHash}`,
+    	type: 'GET',
+    	headers: {
+    		Authorization: `Client-ID ${_clientId}`,
+      },
+    	success: function(){
+        return arguments;
+      }
+    });
+  }
+  window.ICFFunctions = {
+    getCommentById,
+    getImageById,
+    getAlbumById
+  };
   var originalComments = {};
   const Formatting = {
     Super: "^",
@@ -242,7 +259,7 @@ function setDataValue(dat, val){
   function updateFCButtons(){
     if(localStorage.getItem('ICFDATA') != null){
       if(JSON.parse(localStorage.getItem('ICFDATA')).favoriteComments != undefined){
-        let fc = JSON.parse(localStorage.getItem('ICFDATA')).favoriteComments
+        let fc = JSON.parse(localStorage.getItem('ICFDATA')).favoriteComments;
         Object.keys(fc).forEach((kn)=>{
           c = fc[kn];
           let e = document.querySelector(`[data-id="${kn}"]`);
@@ -284,15 +301,20 @@ function setDataValue(dat, val){
       localStorage.setItem('ICFDATA', JSON.stringify({favoriteComments: {}}));
     }
     let commentId = clickComment.getAttribute('data-id');
-    let imageHash = await (async function(e){
+    let albumHash = await (async function(e){
       let d = await getCommentById(e);
       return d.data.image_id;
+    })(commentId);
+    let imageHash = await (async function(e){
+      let d = await getCommentById(e);
+      return d.data.album_cover;
     })(commentId);
     let ICFDATA = JSON.parse(localStorage.getItem('ICFDATA'));
     let newComments = Object.assign({}, ICFDATA.favoriteComments);
     newComments[commentId] = {
       commentId: commentId,
-      imageHash: imageHash
+      imageHash: imageHash,
+      albumHash: albumHash
     };
     setDataValue('favoriteComments', newComments);
   }
@@ -426,10 +448,23 @@ function setDataValue(dat, val){
     };
     return rv;
   }
-  function commentToDOM(comD, imgD){
+  let favFix = `
+    .comment-favorite.comment-create-reply{
+      height:100%;
+      margin: auto 0 auto 0;
+    }
+    .comment-favorite-wrapper{
+      position: absolute;
+      padding: 50% 0;
+      left: 50px;
+      top:50%;
+    }
+  `;
+  function commentToDOM(comD, imgD, albD){
     let ct = document.getElementById('commentTemplate');
+    ct.content.querySelector('#comment-item').querySelector('.caption.unvotable').setAttribute('data-id',comD.data.id);
     ct.content.querySelector('#comment-item').querySelector('#imgHREF').href = `/gallery/${imgD.data.id}`;
-    ct.content.querySelector('#comment-item').querySelector('#imgSRC').src = `//i.imgur.com/${comD.data.album_cover || comD.data.image_id}b.jpg`;
+    ct.content.querySelector('#comment-item').querySelector('#imgSRC').src = `//i.imgur.com/${albD.data.cover||imgD.data.id}b.jpg`;
     ct.content.querySelector('#comment-item').querySelector('#author').querySelector('#comment-username').href=`/user/${comD.data.author}`;
     ct.content.querySelector('#comment-item').querySelector('#author').querySelector('#comment-username').title=`${comD.data.author}`;
     ct.content.querySelector('#comment-item').querySelector('#author').querySelector('#comment-username').innerHTML=`${comD.data.author} via ${comD.data.platform}`;
@@ -447,7 +482,7 @@ function setDataValue(dat, val){
       linkifiedComment = linkifiedComment.replace(l.toReplace,l.domLink);
     });
     ct.content.querySelector('#comment-item').querySelector('#commentText').innerHTML = linkifiedComment;//`${comD.data.comment}`;
-    ct.content.querySelector('#comment-item').querySelector('#context').href = `/gallery/${imgD.data.id}/comment/${comD.data.id}/1`;
+    ct.content.querySelector('#comment-item').querySelector('#context').href = `/gallery/${albD.data.id||imgD.data.id}/comment/${comD.data.id}/1`;
     ct.content.querySelector('#comment-item').querySelector('#context').innerHTML = `context`;
     let newComment = document.importNode(ct.content, true);
     return newComment;
@@ -458,8 +493,9 @@ function setDataValue(dat, val){
     Object.keys(favComments).forEach(async function(kn){
       let v = favComments[kn];
       let commentData = await getCommentById(v.commentId);
-      let imageData = await getImageById(v.imageHash);
-      document.querySelector('.captions').appendChild(commentToDOM(commentData, imageData));
+      let imageData = commentData.data.on_album?await getImageById(commentData.data.album_cover):await getImageById(v.imageHash);
+      let albumData = commentData.data.on_album?(v.albumHash?await getAlbumById(v.albumHash):await getAlbumById(v.imageHash)):await getImageById(v.imageHash);
+      document.querySelector('.captions').appendChild(commentToDOM(commentData, imageData, albumData));
     });
   }
 
@@ -481,6 +517,11 @@ function setDataValue(dat, val){
       appendTo: document.head,
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i'
+    });
+    addElement({
+      tagName: 'style',
+      appendTo: document.head,
+      innerHTML: favFix
     });
     ///document.body.style.backgroundColor = "#141518";
     let mCommentContainer = document.createElement('div');
@@ -566,6 +607,7 @@ function setDataValue(dat, val){
           href: 'https://s.imgur.com/min/gallery.css?1522188452'
         });
         onFavoriteComments();
+        setTimeout(CommentLoop, 500);
       }
     }
   }
