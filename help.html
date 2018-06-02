@@ -47,6 +47,16 @@
           <td class="symbolID">`[</td>
           <td class="symbolID">]`</td>
         </tr>
+        <tr class="myRow">
+          <td class="styleName">Color</td>
+          <td class="symbolID">#{HEXVALUE}[</td>
+          <td class="symbolID">]#</td>
+        </tr>
+        <tr class="myRow">
+          <td class="styleName">Gradient</td>
+          <td class="symbolID">${to DIRECTION,HEXVALUE1,HEXVALUE2...}[</td>
+          <td class="symbolID">]$</td>
+        </tr>
       </table>
     </span>
     <br>
@@ -114,6 +124,28 @@
       <br>
       <p>After:</p>
       <span class="comment">blah `[blah]`</span>
+    </div>
+    <br>
+    <div class="section">
+      <!--Color-->
+      <h2>Color</h2>
+      <br>
+      <p>Before:</p>
+      <span>blah #{00eebb}[blah]#</span>
+      <br>
+      <p>After:</p>
+      <span class="comment">blah #{00eebb}[blah]#</span>
+    </div>
+    <br>
+    <div class="section">
+      <!--Gradient-->
+      <h2>Gradient</h2>
+      <br>
+      <p>Before:</p>
+      <span>blah ${to right,red,green,blue}[blah]$</span>
+      <br>
+      <p>After:</p>
+      <span class="comment">blah ${to right,red,green,blue}[blah]$</span>
     </div>
   </div>
   <script src="./help.js"></script>

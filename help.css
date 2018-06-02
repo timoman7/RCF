@@ -40,6 +40,6 @@ tr:nth-child(odd):not(tr.rowHeader):hover{
   background-color: rgba(255,255,255, 0.4);
 }
 #StyleMarkers{
-  width: 400px;
+  width: 500px;
   height: 200px;
 }

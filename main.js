@@ -130,7 +130,9 @@ function setDataValue(dat, val){
     Emphasis: "~",
     Code: "`",
     Sub: "_",
-    Strike: "-"
+    Strike: "-",
+    Color: "#",
+    Gradient: "$"
   };
   const RegExpList = {
     Super: {
@@ -193,6 +195,26 @@ function setDataValue(dat, val){
         Replacer: "</strike>"
       }
     },
+    Color: {
+      Start: {
+        _RegExp: new RegExp('\\#\\{([a-zA-Z0-9]+)\\}\\[','g'),
+        Replacer: "<color style=\"color: #$1\">"
+      },
+      End: {
+        _RegExp: new RegExp('\\]\\#','g'),
+        Replacer: "</color>"
+      }
+    },
+    Gradient: {
+      Start: {
+        _RegExp: new RegExp('\\$\\{(([#a-zA-Z0-9 ]+)(,[#a-zA-Z0-9 ]+)+)\\}\\[','g'),
+        Replacer: "<color style=\"background:linear-gradient($1);-webkit-background-clip: text;-webkit-text-fill-color:transparent;\">"
+      },
+      End: {
+        _RegExp: new RegExp('\\]\\$','g'),
+        Replacer: "</color>"
+      }
+    }
   };
 
   function getCommentList(){
@@ -537,3 +559,9 @@ function setDataValue(dat, val){
   }
   window.addEventListener('load',windowOnLoad);
 })();
+
+/**
+ * Ideas:
+ * Add color tag
+ * #{HEXCOLOR}[]#
+**/
