@@ -1,6 +1,10 @@
 body{
   background-color: #141518;
 }
+.container{
+  margin: 0 auto;
+  padding: auto 10px;
+}
 button{
   float:left;
 }

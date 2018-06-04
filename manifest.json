@@ -1,10 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "Imgur Comment Formatting",
-  "short_name": "ICF",
-  "description": "Dynamic formatting for Imgur comments",
+  "name": "Reddit Comment Formatting",
+  "short_name": "RCF",
+  "description": "Dynamic formatting for Reddit comments",
   "version": "1.0.1",
   "minimum_chrome_version": "38",
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
   "browser_action": {
     "default_icon": {
         "16": "assets/icon16.png",
@@ -13,12 +17,13 @@
         "48": "assets/icon48.png",
         "128": "assets/icon128.png"
     },
-    "default_title": "Imgur Comment Formatting",
+    "default_title": "Reddit Comment Formatting",
     "default_popup": "popup.html"
   },
   "permissions": [
+    "externally_connectable",
     "tabs",
-    "*://imgur.com/*"
+    "*://*.reddit.com/*"
   ],
   "icons": {
     "16": "assets/icon16.png",
@@ -27,9 +32,10 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
+  "content_security_policy": "script-src 'self' https://www.gstatic.com https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "content_scripts":[{
     "matches": [
-      "*://imgur.com/*"
+      "*://*.reddit.com/*"
     ],
     "js": [
       "main.js",
